@@ -64,3 +64,17 @@ export async function signup({ name, email, password }: SignupInput) {
   revalidatePath("/", "layout");
   return { status: "success", user: data.user };
 }
+
+// Signout
+export async function signout() {
+  const supabase = await createClient();
+
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    redirect("/error");
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/login");
+}

@@ -1,10 +1,16 @@
-"use client";
-
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Users, TrendingDown, Zap } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
+import { redirect } from "next/navigation";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getSession();
+
+  if (data.session) {
+    redirect("/dashboard");
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-muted">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -25,7 +31,7 @@ export default function Home() {
             No more awkward conversations about who owes what.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-            <Link href="/auth/signup" className="w-full sm:w-auto">
+            <Link href="/register" className="w-full sm:w-auto">
               <Button size="lg" className="gap-2 w-full">
                 Get Started <ArrowRight className="w-4 h-4" />
               </Button>
