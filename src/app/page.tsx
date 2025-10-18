@@ -30,7 +30,7 @@ export default function Home() {
                 Get Started <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link href="/auth/login" className="w-full sm:w-auto">
+            <Link href="/login" className="w-full sm:w-auto">
               <Button
                 size="lg"
                 variant="outline"

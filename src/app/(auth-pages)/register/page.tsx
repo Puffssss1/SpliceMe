@@ -1,7 +1,13 @@
 import React from "react";
 
-function RegisterPage() {
-  return <div>RegisterPage</div>;
-}
+import { SignupForm } from "@/components/signup-form";
 
-export default RegisterPage;
+export default function RegisterPage() {
+  return (
+    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <SignupForm />
+      </div>
+    </div>
+  );
+}
