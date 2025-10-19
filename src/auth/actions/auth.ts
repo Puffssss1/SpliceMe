@@ -2,8 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-
 import { createClient } from "@/utils/supabase/server";
+import { type EmailOtpType } from "@supabase/supabase-js";
 
 //Login
 export async function login(formData: FormData) {
@@ -76,5 +76,96 @@ export async function signout() {
   }
 
   revalidatePath("/", "layout");
+  redirect("/login");
+}
+
+// Verify email
+// export async function verifyEmail(
+//   token_hash: string,
+//   type: EmailOtpType,
+//   email: string,
+//   name: string
+// ) {
+//   if (token_hash && type) {
+//     const supabase = await createClient();
+
+//     const { error } = await supabase.auth.verifyOtp({
+//       type,
+//       token_hash,
+//       email,
+//     });
+//     if (!error) {
+//       const { data: exisingUser } = await supabase
+//         .from("user_profile")
+//         .select("*")
+//         .eq("email", email)
+//         .single();
+
+//       if (!exisingUser) {
+//         const { data: insertData } = await supabase
+//           .from("user_profile")
+//           .insert({
+//             email: email,
+//             name: name,
+//           });
+//         return insertData;
+//       }
+
+//       console.log(error);
+//       redirect("/login");
+//     }
+
+//     redirect("/error");
+//   }
+// }
+
+export async function verifyEmail(
+  token_hash: string,
+  type: EmailOtpType,
+  email: string,
+  name: string
+) {
+  if (!token_hash || !type) {
+    redirect("/error");
+  }
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.verifyOtp({
+    type,
+    token_hash,
+  });
+
+  if (error) {
+    console.error("OTP Verification Error:", error.message);
+    redirect("/error");
+  }
+
+  const user = data?.user;
+  if (!user) {
+    console.error("No user returned after OTP verification");
+    redirect("/error");
+  }
+
+  // Check if usre already exists
+  const { data: existingUser } = await supabase
+    .from("user_profile")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (!existingUser) {
+    const { error: insertError } = await supabase.from("user_profile").insert({
+      id: user.id,
+      email: user.email,
+      name,
+    });
+
+    if (insertError) {
+      console.error("Insert user_profile error:", insertError.message);
+      redirect("/error");
+    }
+  }
+
   redirect("/login");
 }

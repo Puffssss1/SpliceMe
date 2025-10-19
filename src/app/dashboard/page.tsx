@@ -2,6 +2,9 @@ import React from "react";
 import Logout from "@/components/logout";
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
+// import { useEffect } from "react"
+// import { CreateGroupDialog } from "@/components/create-group-dialog"
+// import { GroupCard } from "@/components/group-card"
 
 async function Dashboard() {
   const supabase = await createClient();
