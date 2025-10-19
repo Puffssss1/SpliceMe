@@ -64,7 +64,7 @@ function Logout() {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
-          variant="destructive"
+          variant="ghost"
           className="hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
         >
           {isLoading ? (
