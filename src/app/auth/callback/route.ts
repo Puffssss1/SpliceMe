@@ -21,6 +21,7 @@ export async function GET(request: Request) {
         console.log("error in fetching user data: ", userError.message);
         return NextResponse.redirect(`${origin}/error`);
       }
+
       const { data: existingUser } = await supabase
         .from("user_profile")
         .select("*")
@@ -30,6 +31,7 @@ export async function GET(request: Request) {
 
       if (!existingUser) {
         const { error: dbError } = await supabase.from("user_profile").insert({
+          id: data?.user?.id,
           email: data?.user?.email,
           name: data?.user?.user_metadata?.name,
         });
@@ -53,5 +55,5 @@ export async function GET(request: Request) {
   }
 
   // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
+  return NextResponse.redirect(`${origin}/error`);
 }

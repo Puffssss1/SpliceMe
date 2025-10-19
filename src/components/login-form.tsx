@@ -20,7 +20,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
-import { login } from "../auth/actions/auth";
+import { login, signinWithGoogle } from "../app/auth/actions/auth";
 
 export function LoginForm({
   className,
@@ -125,7 +125,12 @@ export function LoginForm({
                   )}
                 </Button>
 
-                <Button variant="outline" type="button">
+                <Button
+                  variant="outline"
+                  type="button"
+                  className="w-full hover:shadow-xl transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  onClick={signinWithGoogle}
+                >
                   Login with Google
                 </Button>
 

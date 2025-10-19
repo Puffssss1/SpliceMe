@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
 import { type EmailOtpType } from "@supabase/supabase-js";
+import { headers } from "next/headers";
 
 //Login
 export async function login(formData: FormData) {
@@ -80,45 +81,6 @@ export async function signout() {
 }
 
 // Verify email
-// export async function verifyEmail(
-//   token_hash: string,
-//   type: EmailOtpType,
-//   email: string,
-//   name: string
-// ) {
-//   if (token_hash && type) {
-//     const supabase = await createClient();
-
-//     const { error } = await supabase.auth.verifyOtp({
-//       type,
-//       token_hash,
-//       email,
-//     });
-//     if (!error) {
-//       const { data: exisingUser } = await supabase
-//         .from("user_profile")
-//         .select("*")
-//         .eq("email", email)
-//         .single();
-
-//       if (!exisingUser) {
-//         const { data: insertData } = await supabase
-//           .from("user_profile")
-//           .insert({
-//             email: email,
-//             name: name,
-//           });
-//         return insertData;
-//       }
-
-//       console.log(error);
-//       redirect("/login");
-//     }
-
-//     redirect("/error");
-//   }
-// }
-
 export async function verifyEmail(
   token_hash: string,
   type: EmailOtpType,
@@ -168,4 +130,26 @@ export async function verifyEmail(
   }
 
   redirect("/login");
+}
+
+// SigninwithGoogle
+export async function signinWithGoogle() {
+  const origin = (await headers()).get("origin");
+  const supabase = await createClient();
+
+  const auth_callback_url = `${origin}/auth/callback`;
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: auth_callback_url,
+    },
+  });
+
+  if (error) {
+    console.log(error);
+    redirect("/error");
+  } else if (data.url) {
+    return redirect(data.url);
+  }
 }

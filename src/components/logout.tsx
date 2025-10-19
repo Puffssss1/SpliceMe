@@ -16,7 +16,7 @@ import {
 import { createClient } from "@/utils/supabase/client";
 import { Button } from "./ui/button";
 import { LogOut } from "lucide-react";
-import { signout } from "../auth/actions/auth";
+import { signout } from "../app/auth/actions/auth";
 import { toast } from "sonner";
 
 function Logout() {

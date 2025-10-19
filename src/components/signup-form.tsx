@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Eye, EyeOff } from "lucide-react";
-import { signup } from "../auth/actions/auth";
+import { signup } from "../app/auth/actions/auth";
 
 export function SignupForm({
   className,
